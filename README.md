@@ -1,4 +1,4 @@
-# 🤖 AI Code Analyzer
+# AI Generated Code Analyzer
 
 A simple web app that analyzes code and predicts how likely it is to be AI-generated. It shows the **AI-percentage** in a circular chart 📊 and streams analysis text like **ChatGPT** 📝.
 
