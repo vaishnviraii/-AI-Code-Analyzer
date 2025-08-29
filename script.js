@@ -18,56 +18,38 @@ async function streamText(text, outputId, speed = 20) {
     }
 }
 
-
-
-
-
 async function Analyze() {
-    
-  const code = document.getElementById("UserCode").value
+    const code = document.getElementById("UserCode").value;
 
-  document.getElementById("output").innerText = "AI is analyzing your Code... Please wait"
+    document.getElementById("output").innerText = "AI is analyzing your Code... Please wait";
 
+    try {
+        // ✅ Correct backend route
+        const res = await fetch("https://ai-generated-code-analyzer.onrender.com/analyze", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ code }),
+        });
 
-  try{
-    //put your link here
-    const res = await fetch("https://ai-generated-code-analyzer.onrender.com", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ code }), 
-  });
+        const data = await res.json();
+        const ans = data.msg;
 
-  const data = await res.json();
-  const ans = data.msg
+        const [percentLine, ...textLines] = ans.split('\n');
 
+        // Remove '%' and trim spaces
+        const percent = percentLine.replace('%', '').trim();
 
-  const [percentLine, ...textLines] = ans.split('\n');
+        // Trim leading spaces from all text lines
+        const text = textLines.map(line => line.trimStart()).join('\n');
 
-// Remove '%' and trim spaces
-const percent = percentLine.replace('%','').trim(); // "75"
-
-// Trim leading spaces from all text lines
-  const text = textLines.map(line => line.trimStart()).join('\n');
-
-  setPercentage(percent)
-
-streamText(text, 'output', 10);
-
-
-  }
-  catch(e){
-      document.getElementById("output").innerText = "AI is unable to analyze code at this moment"
-      setPercentage(0)
-  }
-      
-
-  
+        setPercentage(percent);
+        streamText(text, 'output', 10);
+    } catch (e) {
+        document.getElementById("output").innerText = "AI is unable to analyze code at this moment";
+        setPercentage(0);
+    }
 }
 
-
-window.Analyze = Analyze
-
-
-
+window.Analyze = Analyze;
