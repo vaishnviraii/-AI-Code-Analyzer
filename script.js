@@ -25,7 +25,7 @@ async function Analyze() {
 
     try {
         // ✅ Correct backend route
-        const res = await fetch("https://ai-code-analyzer-pied.vercel.app/", {
+        const res = await fetch("https://ai-generated-code-analyzer.onrender.com", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -53,5 +53,6 @@ async function Analyze() {
 }
 
 window.Analyze = Analyze;
+
 
 
