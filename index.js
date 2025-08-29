@@ -8,20 +8,11 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// --- Simple AI-likelihood logic ---
+// --- AI-likelihood logic (simple random logic for now) ---
 function analyzeCode(code) {
-  outputDiv.innerHTML = "Starting analysis...\n";
-  
-  const eventSource = new EventSource(`${backendUrl}/analyze-stream?code=${encodeURIComponent(code)}`);
-  
-  eventSource.onmessage = (event) => {
-    outputDiv.innerHTML += event.data + "\n";
-    outputDiv.scrollTop = outputDiv.scrollHeight;
-  };
-
-  eventSource.addEventListener("end", () => {
-    eventSource.close();
-  });
+  // Example simple heuristic: longer code looks more "AI-generated"
+  let score = Math.min(100, Math.floor(code.length / 5 + Math.random() * 20));
+  return score;
 }
 
 // --- Streaming route ---
@@ -64,4 +55,3 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
-
