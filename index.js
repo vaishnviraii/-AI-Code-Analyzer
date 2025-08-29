@@ -9,6 +9,20 @@ app.use(cors());
 app.use(express.json());
 
 // --- Simple AI-likelihood logic ---
+app.post("/analyze", (req, res) => {
+    if (!code) return 0;
+
+  let score = 0;
+  if (code.includes("async") || code.includes("await")) score += 20;
+  if (code.includes("function")) score += 15;
+  if (code.length > 100) score += 30;
+  if (code.includes("//")) score += 10;
+  if (code.match(/\bvar\b/)) score -= 10;
+
+  return Math.min(100, Math.max(0, score));
+   // your AI code analyzer logic
+});
+
 function analyzeCode(code) {
   if (!code) return 0;
 
@@ -62,3 +76,4 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+
