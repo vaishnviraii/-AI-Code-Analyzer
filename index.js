@@ -10,15 +10,18 @@ app.use(express.json());
 
 // --- Simple AI-likelihood logic ---
 function analyzeCode(code) {
-  let score = 0;
-  if (code.includes("class") || code.includes("def") || code.includes("#include")) score += 30;
-  if (code.length > 200) score += 30;
-  if (code.match(/\n/gi)?.length > 10) score += 20;
-  if (code.includes("/*") || code.includes("//") || code.includes("#")) score += 10;
+  outputDiv.innerHTML = "Starting analysis...\n";
+  
+  const eventSource = new EventSource(`${backendUrl}/analyze-stream?code=${encodeURIComponent(code)}`);
+  
+  eventSource.onmessage = (event) => {
+    outputDiv.innerHTML += event.data + "\n";
+    outputDiv.scrollTop = outputDiv.scrollHeight;
+  };
 
-  // clamp score between 5% and 95%
-  score = Math.min(95, Math.max(5, score));
-  return score;
+  eventSource.addEventListener("end", () => {
+    eventSource.close();
+  });
 }
 
 // --- Streaming route ---
@@ -61,3 +64,4 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+
