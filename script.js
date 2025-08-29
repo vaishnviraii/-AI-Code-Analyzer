@@ -31,7 +31,7 @@ async function Analyze() {
 
   try{
     //put your link here
-    const res = await fetch(" https://ai-code-analyzer-dh4t.onrender.com/", {
+    const res = await fetch("https://ai-code-analyzer-dh4t.onrender.com", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -68,4 +68,5 @@ streamText(text, 'output', 10);
 
 
 window.Analyze = Analyze
+
 
