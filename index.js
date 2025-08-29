@@ -1,4 +1,4 @@
-// index.js
+// index.js (backend)
 const express = require("express");
 const cors = require("cors");
 
@@ -8,11 +8,18 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// --- AI-likelihood logic (simple random logic for now) ---
+// --- Simple AI-likelihood logic ---
 function analyzeCode(code) {
-  // Example simple heuristic: longer code looks more "AI-generated"
-  let score = Math.min(100, Math.floor(code.length / 5 + Math.random() * 20));
-  return score;
+  if (!code) return 0;
+
+  let score = 0;
+  if (code.includes("async") || code.includes("await")) score += 20;
+  if (code.includes("function")) score += 15;
+  if (code.length > 100) score += 30;
+  if (code.includes("//")) score += 10;
+  if (code.match(/\bvar\b/)) score -= 10;
+
+  return Math.min(100, Math.max(0, score));
 }
 
 // --- Streaming route ---
